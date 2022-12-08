@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:seperate_code/food/model/food_entity.dart';
+import 'package:separate_code/food/model/food_entity.dart';
 
 class FoodModel extends FoodEntity {
   FoodModel({

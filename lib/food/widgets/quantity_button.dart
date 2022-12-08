@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../controller/quantity_interactor.dart';
+import '../controller/food_quantity_behavior.dart';
 
 enum QuantityEnum {
   increase,
@@ -23,13 +23,13 @@ extension QuantityEnumExtension on QuantityEnum {
     return Icon(iconData);
   }
 
-  void action(QuantityInteractor interactor) {
+  void action(QuantityBehavior behavior) {
     switch (this) {
       case QuantityEnum.increase:
-        interactor.increase();
+        behavior.increase();
         break;
       case QuantityEnum.decrease:
-        interactor.decrease();
+        behavior.decrease();
         break;
       default:
         throw UnimplementedError();
@@ -41,18 +41,18 @@ class QuantityButton extends StatelessWidget {
   final QuantityEnum type;
   const QuantityButton({
     Key? key,
-    required this.interactor,
+    required this.behavior,
     required this.type,
   }) : super(key: key);
 
-  final QuantityInteractor interactor;
+  final QuantityBehavior behavior;
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
       child: type.icon,
       onPressed: () {
-        type.action(interactor);
+        type.action(behavior);
       },
     );
   }

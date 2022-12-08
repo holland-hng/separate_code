@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:seperate_code/food/controller/quantity_interactor.dart';
-import 'package:seperate_code/food/model/food_model.dart';
+import 'package:separate_code/food/controller/food_quantity_behavior.dart';
+import 'package:separate_code/food/model/food_model.dart';
 
 import 'food_repository.dart';
 
@@ -12,17 +12,17 @@ class FoodControllerFactory {
 
 abstract class FoodControllerInterface {
   final Rx<FoodModel> rxFood = Rx<FoodModel>(FoodModel.defaultFood());
-  QuantityInteractor get quantityInteractor;
+  QuantityBehavior get quantityBehavior;
   void reload();
 }
 
 abstract class FoodController extends FoodControllerInterface {
-  FoodRepositoty repository = FoodRepositoty();
+  FoodRepository repository = FoodRepository();
 }
 
 class FoodControllerImpl extends FoodController with FoodQuantityHandler {
   @override
-  late QuantityInteractor quantityInteractor = this;
+  late QuantityBehavior quantityBehavior = this;
 
   @override
   void reload() {}
