@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../controller/food_quantity_behavior.dart';
+import 'package:separate_code/food/controller/food_controller.dart';
 
 enum QuantityEnum {
   increase,
@@ -26,10 +25,10 @@ extension QuantityEnumExtension on QuantityEnum {
   void action(QuantityBehavior behavior) {
     switch (this) {
       case QuantityEnum.increase:
-        behavior.increase();
+        behavior.onIncreaseQuantity();
         break;
       case QuantityEnum.decrease:
-        behavior.decrease();
+        behavior.onDecreaseQuantity();
         break;
       default:
         throw UnimplementedError();

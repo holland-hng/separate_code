@@ -1,29 +1,49 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:separate_code/food/controller/food_quantity_behavior.dart';
+import 'package:injectable/injectable.dart';
+import 'package:separate_code/core/base_controller.dart';
+import 'package:separate_code/food/controller/food_state.dart';
 import 'package:separate_code/food/model/food_model.dart';
-
 import 'food_repository.dart';
 
-class FoodControllerFactory {
-  static FoodController create() {
-    return FoodControllerImpl();
-  }
-}
+part 'food_quantity_behavior.dart';
 
-abstract class FoodControllerInterface {
-  final Rx<FoodModel> rxFood = Rx<FoodModel>(FoodModel.defaultFood());
+abstract class FoodController {
+  Rx<FoodState> get rxState;
+  Rx<FoodModel> get rxFood;
   QuantityBehavior get quantityBehavior;
-  void reload();
 }
 
-abstract class FoodController extends FoodControllerInterface {
-  FoodRepository repository = FoodRepository();
+abstract class FoodControllerIntermediary
+    extends BaseController<FoodModel, FoodRepository>
+    implements FoodController {
+  FoodControllerIntermediary(super.repository);
 }
 
-class FoodControllerImpl extends FoodController with FoodQuantityHandler {
+@Injectable(as: FoodController)
+class FoodControllerImpl extends FoodControllerIntermediary
+    with FoodQuantityHandler {
   @override
-  late QuantityBehavior quantityBehavior = this;
+  QuantityBehavior get quantityBehavior => this;
 
   @override
-  void reload() {}
+  final Rx<FoodModel> rxFood = Rx<FoodModel>(FoodModel.defaultFood());
+
+  FoodControllerImpl(super.repository) {
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    rxState.value = FoodState.fetching;
+    final result = await fetchData();
+    result.when((FoodModel food) {
+      rxFood.value = food;
+      rxState.value = FoodState.loaded;
+    }, (error) {
+      rxState.value = FoodState.error;
+    });
+  }
+
+  @override
+  Rx<FoodState> rxState = FoodState.none.obs;
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'di/di.dart';
 import 'food/widgets/food_screen.dart';
 
 void main() {
+  configureDependencies();
   runApp(const MyApp());
 }
 

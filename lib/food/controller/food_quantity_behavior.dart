@@ -1,28 +1,30 @@
-import 'package:flutter/material.dart';
-
-import 'food_controller.dart';
+part of 'food_controller.dart';
 
 abstract class QuantityBehavior {
-  void increase();
-  void decrease();
+  void onIncreaseQuantity();
+  void onDecreaseQuantity();
 }
 
-mixin FoodQuantityHandler on FoodController implements QuantityBehavior {
+mixin FoodQuantityHandler on FoodControllerIntermediary
+    implements QuantityBehavior {
   static const decreaseCubit = -1;
   static const increaseCubit = 1;
   @override
-  void decrease() {
+  void onDecreaseQuantity() {
     modifyQuantity(cubit: decreaseCubit);
     debugPrint("decrease");
   }
 
   @override
-  void increase() {
+  void onIncreaseQuantity() {
     modifyQuantity(cubit: increaseCubit);
     debugPrint("increase");
   }
 
+  @protected
   void modifyQuantity({required int cubit}) {
+    if (rxState.value.notInteraction) return;
+
     final food = rxFood.value;
     rxFood.value = food.modifyQuantity(cubit: cubit);
     repository.modifyQuantity(
